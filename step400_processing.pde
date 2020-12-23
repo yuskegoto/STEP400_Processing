@@ -22,7 +22,8 @@ int K_RUN = 169;
 int K_ACC = 169;
 int K_DEC = 169;
 float RUN_MAX = 650;
-float GOTO_MAX = 25;
+// 12800 for one rotation
+float GOTO_MAX = 12800/2;
 String currentState;
 float currentValRun = 0;
 float currentValGoTo = 0;
