@@ -21,7 +21,8 @@ int K_HOLD = 20;
 int K_RUN = 169;
 int K_ACC = 169;
 int K_DEC = 169;
-float SCALE = 25;
+float RUN_MAX = 650;
+float GOTO_MAX = 25;
 String currentState;
 float currentValRun = 0;
 float currentValGoTo = 0;
@@ -131,7 +132,7 @@ void mousePressed()
   /* Check run condition */
   else if (checkButtonArea(FIELD_RUN) && currentState.equals("Run"))
   {
-    currentValRun = (float)(mouseX - FIELD_RUN[2]/2) * SCALE;
+    currentValRun = (float)(mouseX - FIELD_RUN[2]/2) / (FIELD_RUN[2]/2) * RUN_MAX;
     sendRun(MOTOR_NO, currentValRun);
   }
   else if (checkButtonArea(BUTTON_GOTO))
@@ -144,7 +145,7 @@ void mousePressed()
   /* Check GoTo condition */
   else if (checkButtonArea(FIELD_GOTO) && currentState.equals("GoTo"))
   {
-    currentValGoTo = (float)(mouseX - FIELD_GOTO[2]/2) * SCALE;
+    currentValGoTo = (float)(mouseX - FIELD_GOTO[2]/2) / (FIELD_GOTO[2]/2) * GOTO_MAX;
     sendGoTo(MOTOR_NO, (int)currentValGoTo);
   }
   else if (checkButtonArea(BUTTON_PID))
@@ -163,7 +164,7 @@ void mousePressed()
 
 void sendPidPosition(float pos)
 {
-  currentValPid = (float)(pos - FIELD_PID[2]/2) * SCALE;
+  currentValPid = (float)(pos - FIELD_PID[2]/2) / (FIELD_PID[2]/2) * GOTO_MAX;
   sendSetTargetPosition(MOTOR_NO, (int)currentValPid);
 }
 
@@ -311,8 +312,10 @@ void showButtonField(int[] btn, int[] fld, float currentVal, String state, Strin
   if(isActive)
   {
     fill(fieldColor);
-    float val = currentVal/SCALE;
-    rect(fld[0] + fld[2] / 2, fld[1], val, fld[3]);
+    float barWidth = 0;
+    if(name.equals("Run")) barWidth =  fld[2] / 2 * currentVal/RUN_MAX;
+    else barWidth =  fld[2] / 2 * currentVal/GOTO_MAX;
+    rect(fld[0] + fld[2] / 2, fld[1], barWidth, fld[3]);
   }
   fill(textColor);
   text(name, btn[0] + btn[2]/2, btn[1] + btn[3]/2);
